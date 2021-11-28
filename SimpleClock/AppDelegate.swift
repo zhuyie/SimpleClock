@@ -29,11 +29,13 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         
         // Move the window to the built-in screen.
         var screen = NSScreen.main
-        NSScreen.screens.forEach {
-            // print($0.localizedName)
-            if $0.localizedName == "Built-in Retina Display" {
-                screen = $0
-            }
+        let descKey: NSDeviceDescriptionKey = NSDeviceDescriptionKey(rawValue: "NSScreenNumber")
+        let builtinScreens = NSScreen.screens.filter {
+            guard let deviceID = $0.deviceDescription[descKey] as? NSNumber else { return false }
+            return CGDisplayIsBuiltin(deviceID.uint32Value) != 0
+        }
+        if builtinScreens.count > 0 {
+            screen = builtinScreens[0]
         }
         var origin = screen!.visibleFrame.origin
         origin.x += (screen!.visibleFrame.width - windowWidth) / 2
