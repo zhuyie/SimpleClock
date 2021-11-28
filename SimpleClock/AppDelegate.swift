@@ -18,12 +18,13 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         let contentView = ContentView()
 
         // Create the window and set the content view.
+        let windowWidth: CGFloat = 800
+        let windowHeight: CGFloat = 600
         window = NSWindow(
-            contentRect: NSRect(x: 0, y: 0, width: 480, height: 300),
+            contentRect: NSRect(x: 0, y: 0, width: windowWidth, height: windowHeight),
             styleMask: [.titled, .closable, .miniaturizable, .resizable, .fullSizeContentView],
             backing: .buffered, defer: false)
         window.isReleasedWhenClosed = false
-        window.setFrameAutosaveName("Main Window")
         window.contentView = NSHostingView(rootView: contentView)
         
         // Move the window to the built-in screen.
@@ -34,8 +35,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 screen = $0
             }
         }
-        window.setFrameOrigin(screen!.visibleFrame.origin)
-
+        var origin = screen!.visibleFrame.origin
+        origin.x += (screen!.visibleFrame.width - windowWidth) / 2
+        origin.y += (screen!.visibleFrame.height - windowHeight) / 2
+        window.setFrameOrigin(origin)
+        
         // Show the window
         window.makeKeyAndOrderFront(nil)
 
