@@ -26,7 +26,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             backing: .buffered, defer: false)
         window.isReleasedWhenClosed = false
         window.contentView = NSHostingView(rootView: contentView)
-        
+
         // Move the window to the built-in screen.
         var screen = NSScreen.main
         let descKey: NSDeviceDescriptionKey = NSDeviceDescriptionKey(rawValue: "NSScreenNumber")
@@ -41,9 +41,14 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         origin.x += (screen!.visibleFrame.width - windowWidth) / 2
         origin.y += (screen!.visibleFrame.height - windowHeight) / 2
         window.setFrameOrigin(origin)
-        
+
         // Show the window
         window.makeKeyAndOrderFront(nil)
+
+        // When the app was launched from Launchpad, sometimes the window
+        // moved to another screen for unknown reason.
+        // To workaround this issue, we call setFrameOrigin again.
+        window.setFrameOrigin(origin)
 
         // Takes the window into fullscreen mode.
         window.toggleFullScreen(nil)
